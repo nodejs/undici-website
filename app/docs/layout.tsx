@@ -1,12 +1,16 @@
+import Sidebar from "../components/sidebar";
+
 export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <div className="px-2">
-      <p>Docs Layout</p>
+    <main className="flex h-full flex-row gap-4">
+      <Sidebar pageName="Docs"/>
+      <article className="prose">
       {children}
-    </div>
+      </article>
+    </main>
   );
 }

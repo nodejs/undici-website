@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "./components/navbar";
 import Sidebar from "./components/sidebar";
+import Footer from "./components/footer";
 
 export const metadata: Metadata = {
   title: "Node.js Undici",
@@ -15,13 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full bg-white">
-      <body className={`flex h-full flex-col gap-4 ${GeistSans.className}`}>
+    <html lang="en" className="bg-white">
+      <body className={`mx-auto flex h-screen flex-col ${GeistSans.className}`}>
         <Navbar/>
-        <Sidebar/>
-        <main className="px-2">
-          {children}
-        </main>
+        {children}
+        <Footer />
       </body>
     </html>
   );

@@ -26,7 +26,9 @@ export default function Navbar() {
         <header>
             <nav className="flex items-center justify-between border-b-2 border-green-700 px-2 py-4 font-semibold text-gray-900" aria-label="Global navigation">
                 <div className="flex items-center gap-4">
-                    <span>undici</span>
+                    <Link href="/">
+                        undici
+                    </Link>
                 </div>
                 <div className="flex items-center justify-center gap-4">
                     {routes.map(route => (
