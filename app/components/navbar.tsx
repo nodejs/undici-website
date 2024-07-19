@@ -30,7 +30,7 @@ export default function Navbar() {
                 </div>
                 <div className="flex items-center justify-center gap-4">
                     {routes.map(route => (
-                        <Link key={route.text} href={route.href} className={pathname === route.href ? "text-green-700": ""}>
+                        <Link key={route.text} href={route.href} className={`capitalize ${pathname === route.href ? "text-green-700": ""}`}>
                             {route.text}
                         </Link>
                     ))}
