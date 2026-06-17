@@ -1,6 +1,6 @@
 import Select from '@node-core/ui-components/Common/Select';
 import SideBar from "@node-core/ui-components/Containers/Sidebar";
-import styles from "@node-core/doc-kit/src/generators/web/ui/components/Sidebar/index.module.css";
+import styles from "@node-core/doc-kit/src/generators/web/ui/components/SideBar/index.module.css";
 import { relativeOrAbsolute } from "@node-core/doc-kit/src/generators/web/ui/utils/relativeOrAbsolute.mjs";
 import { project, version, pages } from "#theme/config";
 import { sidebar } from "#theme/local/site" with { type: "json" };
