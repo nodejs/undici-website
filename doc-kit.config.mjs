@@ -41,8 +41,8 @@ export default {
   },
   web: {
     // Important Configuration
-    project: "Node.js",
-    title: "{project} Undici",
+    project: "Undici",
+    title: "Node.js {project}",
     useAbsoluteURLs: true,
     pageURL: "{baseURL}{path}.html",
     editURL: IS_LATEST
