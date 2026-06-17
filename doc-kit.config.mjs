@@ -37,11 +37,13 @@ export default {
   "jsx-ast": {
     generateIndexPage: false,
     generateAllPage: false,
+    generate404Page: IS_LATEST,
   },
   web: {
     // Important Configuration
     project: "Node.js",
     title: "{project} Undici",
+    useAbsoluteURLs: true,
     pageURL: "{baseURL}{path}.html",
     editURL: IS_LATEST
       ? "https://github.com/nodejs/undici/edit/main/docs/docs{path}.md"
