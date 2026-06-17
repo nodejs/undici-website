@@ -40,7 +40,7 @@ export default ({ metadata }) => (
         label={`${project} version`}
         values={versions.map((v) => ({
           label: v,
-          value: v === versions[0] ? "/" : `/v${v.split(".")[0]}.x/`,
+          value: v === versions[0] ? "/" : `/${v.split(".")[0]}.x/`,
         }))}
         inline={true}
         className={styles.select}
