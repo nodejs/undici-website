@@ -26,7 +26,7 @@ export default ({ metadata }) => (
               groupName: "Documentation",
               items: pages.map(([heading, path]) => ({
                 label: heading,
-                link: `${metadata.path}.html`,
+                link: path,
               })),
             },
           ]
