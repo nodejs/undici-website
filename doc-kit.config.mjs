@@ -12,15 +12,9 @@ const URL_PATH = IS_LATEST ? "/" : `/${MAJOR_VERSION}/`;
 
 const BASE_URL = `${ORIGIN}${URL_PATH}`;
 
-const typeMap = join(
-  import.meta.dirname,
-  "docs",
-  MAJOR_VERSION,
-  "type-map.json",
-);
-const hasLocalSiteConfig = existsSync(
-  join(import.meta.dirname, "site.local.json"),
-);
+const versionRoot = join(import.meta.dirname, "docs", MAJOR_VERSION);
+const typeMap = join(versionRoot, "type-map.json");
+const localSiteConfig = join(versionRoot, "site.json");
 
 /** @type {import('@node-core/doc-kit/src/utils/configuration/types.d.ts').Configuration} */
 export default {
@@ -55,8 +49,8 @@ export default {
       "#theme/Navigation": join(import.meta.dirname, "components/NavBar.jsx"),
       "#theme/Sidebar": join(import.meta.dirname, "components/SideBar.jsx"),
 
-      "#theme/local/site": hasLocalSiteConfig
-        ? join(import.meta.dirname, "site.local.json")
+      "#theme/local/site": existsSync(localSiteConfig)
+        ? localSiteConfig
         : join(import.meta.dirname, "site.json"),
       "#theme/site": join(import.meta.dirname, "site.json"),
     },
