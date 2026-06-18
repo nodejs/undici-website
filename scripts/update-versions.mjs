@@ -1,7 +1,9 @@
 import { readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { major, valid } from "semver";
 
-const VERSIONS_FILE = "./versions.json";
+const ROOT = join(import.meta.dirname, "..");
+const VERSIONS_FILE = join(ROOT, "versions.json");
 
 const [tag] = process.argv.slice(2);
 if (!tag) throw new Error("Missing release tag (e.g. v5.108.0)");
