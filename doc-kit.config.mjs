@@ -7,7 +7,7 @@ const IS_LATEST = process.env.IS_LATEST === "true";
 
 const ORIGIN = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
-  : 'http://localhost:3000';
+  : "http://localhost:3000";
 const URL_PATH = IS_LATEST ? "/" : `/${MAJOR_VERSION}/`;
 
 const BASE_URL = `${ORIGIN}${URL_PATH}`;

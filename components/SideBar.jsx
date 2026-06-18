@@ -12,6 +12,8 @@ const redirect = (url) => {
 
 const PrefetchLink = (props) => <a {...props} rel="prefetch" />;
 
+const basePath = (v) => (v === versions[0] ? "/" : `/${v.split(".")[0]}.x/`);
+
 /**
  * Sidebar component for MDX documentation with page navigation
  */
@@ -26,7 +28,7 @@ export default ({ metadata }) => (
               groupName: "Documentation",
               items: pages.map(([heading, path]) => ({
                 label: heading,
-                link: path,
+                link: basePath(version.version) + path.replace(/^\/?/, ""),
               })),
             },
           ]
@@ -40,7 +42,7 @@ export default ({ metadata }) => (
         label={`${project} version`}
         values={versions.map((v) => ({
           label: v,
-          value: v === versions[0] ? "/" : `/${v.split(".")[0]}.x/`,
+          value: basePath(v),
         }))}
         inline={true}
         className={styles.select}

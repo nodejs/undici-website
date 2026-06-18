@@ -1,26 +1,26 @@
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
-import { major } from 'semver';
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { major } from "semver";
 
-const REPO = 'nodejs/undici';
-const ROOT = join(import.meta.dirname, '..');
-const VERSIONS_FILE = join(ROOT, 'versions.json');
-const DOCS_DIR = join(ROOT, 'docs');
+const REPO = "nodejs/undici";
+const ROOT = join(import.meta.dirname, "..");
+const VERSIONS_FILE = join(ROOT, "versions.json");
+const DOCS_DIR = join(ROOT, "docs");
 const CONCURRENCY = 10;
 
 // A token is optional, but lifts the unauthenticated 60 req/hour API limit.
 const token = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN;
 const headers = {
-  ...(token && { Authorization: `Bearer ${token}` })
+  ...(token && { Authorization: `Bearer ${token}` }),
 };
 
 /** Encode a repo-relative path for use in a URL while keeping the slashes. */
-const encodePath = path => path.split('/').map(encodeURIComponent).join('/');
+const encodePath = (path) => path.split("/").map(encodeURIComponent).join("/");
 
 /** Fetch and parse JSON from the GitHub REST API. */
 async function fetchJSON(url) {
   const res = await fetch(url, {
-    headers: { ...headers, Accept: 'application/vnd.github+json' }
+    headers: { ...headers, Accept: "application/vnd.github+json" },
   });
   if (!res.ok) {
     throw new Error(`GitHub API ${res.status} ${res.statusText} for ${url}`);
@@ -56,20 +56,22 @@ async function fetchDocsForTag(tag) {
 
   // One recursive tree call lists every file in the tag.
   const { tree, truncated } = await fetchJSON(
-    `https://api.github.com/repos/${REPO}/git/trees/${encodeURIComponent(tag)}?recursive=1`
+    `https://api.github.com/repos/${REPO}/git/trees/${encodeURIComponent(tag)}?recursive=1`,
   );
   if (truncated) {
-    throw new Error(`Tree for ${tag} was truncated; cannot mirror docs reliably`);
+    throw new Error(
+      `Tree for ${tag} was truncated; cannot mirror docs reliably`,
+    );
   }
 
   const docsFiles = tree.filter(
-    node => node.type === 'blob' && node.path.startsWith('docs/')
+    (node) => node.type === "blob" && node.path.startsWith("docs/"),
   );
 
   // Newer releases (v6+) nest the real docs under docs/docs; older ones use docs/.
-  const nested = docsFiles.some(node => node.path.startsWith('docs/docs/'));
-  const sourceRoot = nested ? 'docs/docs/' : 'docs/';
-  const files = docsFiles.filter(node => node.path.startsWith(sourceRoot));
+  const nested = docsFiles.some((node) => node.path.startsWith("docs/docs/"));
+  const sourceRoot = nested ? "docs/docs/" : "docs/";
+  const files = docsFiles.filter((node) => node.path.startsWith(sourceRoot));
 
   if (files.length === 0) {
     throw new Error(`No docs found under ${sourceRoot} for ${tag}`);
@@ -78,7 +80,7 @@ async function fetchDocsForTag(tag) {
   // Replace any previous output so removed upstream files don't linger.
   await rm(outDir, { recursive: true, force: true });
 
-  await eachLimit(files, CONCURRENCY, async node => {
+  await eachLimit(files, CONCURRENCY, async (node) => {
     const dest = join(outDir, node.path.slice(sourceRoot.length));
     const content = await fetchFile(tag, node.path);
     await mkdir(dirname(dest), { recursive: true });
@@ -87,20 +89,36 @@ async function fetchDocsForTag(tag) {
 
   // Finally, put the README in the root of the docs for the index page.
   const readmeNode = tree.find(
-    node => node.type === 'blob' && node.path.toLowerCase() === 'readme.md'
+    (node) => node.type === "blob" && node.path.toLowerCase() === "readme.md",
   );
   if (readmeNode) {
     const readmeContent = await fetchFile(tag, readmeNode.path);
-    await writeFile(join(outDir, 'index.md'), readmeContent);
+    await writeFile(join(outDir, "index.md"), readmeContent);
   }
 
-  console.log(`${tag} → docs/${majorVersion}/ (${files.length} files from ${sourceRoot})`);
+  console.log(
+    `${tag} → docs/${majorVersion}/ (${files.length} files from ${sourceRoot})`,
+  );
 }
 
-const versions = JSON.parse(await readFile(VERSIONS_FILE, 'utf8'));
+async function fetchSiteConfig() {
+  const url = `https://raw.githubusercontent.com/nodejs/learn/main/site.json`;
+  const res = await fetch(url, { headers });
+  const json = await res.json();
+  json.sidebar = [];
+  json.navigation.forEach((item) => {
+    item.link = new URL(item.link, "https://nodejs.org").href;
+  });
+
+  await writeFile(join(ROOT, "site.json"), JSON.stringify(json, null, 2));
+}
+
+const versions = JSON.parse(await readFile(VERSIONS_FILE, "utf8"));
 
 for (const tag of versions) {
   await fetchDocsForTag(tag);
 }
+
+fetchSiteConfig();
 
 console.log(`Fetched docs for ${versions.length} version(s).`);

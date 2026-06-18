@@ -1,12 +1,12 @@
-import ThemeToggle from '@node-core/ui-components/Common/ThemeToggle';
-import NavBar from '@node-core/ui-components/Containers/NavBar';
-import styles from '@node-core/ui-components/Containers/NavBar/index.module.css';
-import GitHubIcon from '@node-core/ui-components/Icons/Social/GitHub';
+import ThemeToggle from "@node-core/ui-components/Common/ThemeToggle";
+import NavBar from "@node-core/ui-components/Containers/NavBar";
+import styles from "@node-core/ui-components/Containers/NavBar/index.module.css";
+import GitHubIcon from "@node-core/ui-components/Icons/Social/GitHub";
 
-import SearchBox from '@node-core/doc-kit/src/generators/web/ui/components/SearchBox';
-import { useTheme } from '@node-core/doc-kit/src/generators/web/ui/hooks/useTheme.mjs';
-import { navigation } from '#theme/site' with { type: 'json' };
-import Logo from '#theme/Logo';
+import SearchBox from "@node-core/doc-kit/src/generators/web/ui/components/SearchBox";
+import { useTheme } from "@node-core/doc-kit/src/generators/web/ui/hooks/useTheme.mjs";
+import { navigation } from "#theme/site" with { type: "json" };
+import Logo from "#theme/Logo";
 
 /**
  * NavBar component that displays the headings, search, etc.
