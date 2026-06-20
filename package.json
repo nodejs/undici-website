@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "build:fetch-docs": "node scripts/fetch-undici-docs.mjs",
+    "build:html": "node scripts/build-html.mjs",
+    "build": "npm run build:fetch-docs && npm run build:html"
+  },
+  "dependencies": {
+    "@node-core/doc-kit": "^1.3.10",
+    "@node-core/ui-components": "^1.7.0",
+    "semver": "^7.8.4"
+  },
+  "type": "module"
+}
