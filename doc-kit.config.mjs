@@ -12,6 +12,8 @@ const URL_PATH = IS_LATEST ? "/" : `/${MAJOR_VERSION}/`;
 
 const BASE_URL = `${ORIGIN}${URL_PATH}`;
 
+const description = "An HTTP/1.1 client, written from scratch for Node.js.";
+
 const versionRoot = join(import.meta.dirname, "docs", MAJOR_VERSION);
 const typeMap = join(versionRoot, "type-map.json");
 const localSiteConfig = join(versionRoot, "site.json");
@@ -42,6 +44,25 @@ export default {
     editURL: IS_LATEST
       ? "https://github.com/nodejs/undici/edit/main/docs/docs{path}.md"
       : undefined,
+    templatePath: join(import.meta.dirname, 'template.html'),
+
+    // Metadata
+    head: {
+      meta: [
+        {
+          name: "description",
+          content: description,
+        },
+        {
+          name: "og:description",
+          content: description,
+        },
+        {
+          name: "og:image",
+          content: `https://nodejs.org/en/next-data/og/announcement/${encodeURIComponent(`Undici - ${description}`)}.png`,
+        }
+      ],
+    },
 
     // Imports
     imports: {
