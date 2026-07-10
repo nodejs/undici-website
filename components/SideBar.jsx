@@ -12,19 +12,23 @@ const redirect = (url) => {
 
 const PrefetchLink = (props) => <a {...props} rel="prefetch" />;
 
-const major = (v) => v.split(".")[0];
+// normalises away the "v" prefix so both compare equal.
+const major = (v) => String(v.version ?? v).replace(/^v/, "").split(".")[0];
 
 const basePath = (v) => {
-  const majorVersion = major(v.version || v);
-  return majorVersion === major(version.version) ? "/" : `/${majorVersion}.x/`;
+  const majorVersion = major(v);
+  return majorVersion === major(versions[0]) ? "/" : `/v${majorVersion}.x/`;
 };
+
+const toURL = (path) =>
+  basePath(version) + path.replace(/\/index$/, "").replace(/^\/?/, "");
 
 /**
  * Sidebar component for MDX documentation with page navigation
  */
 export default ({ metadata }) => (
   <SideBar
-    pathname={metadata.path.replace("/index", "")}
+    pathname={toURL(metadata.path)}
     groups={
       sidebar.length > 0
         ? sidebar
@@ -33,7 +37,7 @@ export default ({ metadata }) => (
               groupName: "Documentation",
               items: pages.map(([heading, path]) => ({
                 label: heading,
-                link: basePath(version) + path.replace(/^\/?/, ""),
+                link: toURL(path),
               })),
             },
           ]
