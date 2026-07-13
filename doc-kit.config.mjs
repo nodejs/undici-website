@@ -80,4 +80,8 @@ export default {
     indexURL: "{baseURL}",
     pageURL: "{baseURL}{path}",
   },
+  "llms-txt": {
+    templatePath: join(import.meta.dirname, "llms-template.txt"),
+    pageURL: `${ORIGIN}${IS_LATEST ? "" : `/${MAJOR_VERSION}`}{path}.html`,
+  },
 };
