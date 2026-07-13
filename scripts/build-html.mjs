@@ -24,6 +24,8 @@ const runDocKit = (version) =>
       "orama-db",
       "-t",
       "legacy-json",
+      "-t",
+      "llms-txt",
       "--config-file",
       "./doc-kit.config.mjs",
     ],
