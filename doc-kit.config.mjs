@@ -1,4 +1,4 @@
-import { join } from "node:path";
+.import { join } from "node:path";
 import { existsSync } from "node:fs";
 import { major } from "semver";
 
