@@ -8,8 +8,8 @@ The site pulls the Markdown docs straight from the `nodejs/undici` repository at
 each supported release tag and renders them into static HTML with
 [`@node-core/doc-kit`](https://www.npmjs.com/package/@node-core/doc-kit), the
 same documentation toolchain used across the Node.js project. The latest major
-version is served at the site root (`/`); older majors live under a versioned
-path (e.g. `/v7.x/`).
+version is served from a versioned path (e.g. `/v8.x/`), and Vercel temporarily
+redirects the site root (`/`) to that path.
 
 ## Getting started
 
@@ -35,7 +35,7 @@ The build is driven by a couple of environment variables consumed in
 [`doc-kit.config.mjs`](doc-kit.config.mjs):
 
 - `VERSION` — the Undici version being built (e.g. `v8.5.0`)
-- `IS_LATEST` — `"true"` when building the newest major (served at `/`)
+- `IS_LATEST` — `"true"` when building the newest major
 
 ## How it works
 
@@ -91,9 +91,9 @@ Each invocation runs with `VERSION` set to the current tag and `IS_LATEST` set t
 `true` only for the first (newest) entry. [`doc-kit.config.mjs`](doc-kit.config.mjs)
 reads those variables to decide:
 
-- **Output path & routing** — the latest major builds to `out/` and is served at
-  the root (`/`); every other major builds to `out/v<major>.x/` and is served
-  under that path.
+- **Output path & routing** — every major builds to `out/v<major>.x/` and is
+  served under that versioned path. Vercel temporarily redirects `/` to the
+  current latest path.
 - **Generated targets** — `web` (the static HTML), `orama-db` (the client-side
   search index), and `legacy-json` (the legacy JSON API docs). The
   index/all/404 helper pages are only generated for the latest version.

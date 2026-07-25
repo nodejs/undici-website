@@ -17,11 +17,20 @@ const major = (v) => String(v.version ?? v).replace(/^v/, "").split(".")[0];
 
 const basePath = (v) => {
   const majorVersion = major(v);
-  return majorVersion === major(versions[0]) ? "/" : `/v${majorVersion}.x/`;
+  return `/v${majorVersion}.x/`;
 };
 
-const toURL = (path) =>
-  basePath(version) + path.replace(/\/index$/, "").replace(/^\/?/, "");
+const toURL = (path) => {
+  if (/^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(path)) return path;
+  return basePath(version) + path.replace(/\/index$/, "").replace(/^\/?/, "");
+};
+
+const withVersionedLinks = (items) =>
+  items.map((item) => ({
+    ...item,
+    ...(item.link ? { link: toURL(item.link) } : {}),
+    ...(item.items ? { items: withVersionedLinks(item.items) } : {}),
+  }));
 
 /**
  * Sidebar component for MDX documentation with page navigation
@@ -31,7 +40,7 @@ export default ({ metadata }) => (
     pathname={toURL(metadata.path)}
     groups={
       sidebar.length > 0
-        ? sidebar
+        ? withVersionedLinks(sidebar)
         : [
             {
               groupName: "Documentation",

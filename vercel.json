@@ -7,6 +7,11 @@
   "buildCommand": "npm run build",
   "redirects": [
     {
+      "source": "/",
+      "destination": "/v8.x",
+      "permanent": false
+    },
+    {
       "source": "/docs/docs/:path*",
       "destination": "/:path*"
     }
