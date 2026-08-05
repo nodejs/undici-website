@@ -45,6 +45,7 @@ export default {
       ? "https://github.com/nodejs/undici/edit/main/docs/docs{path}.md"
       : undefined,
     templatePath: join(import.meta.dirname, 'template.html'),
+    remoteConfigUrl: '',
 
     // Metadata
     head: {
