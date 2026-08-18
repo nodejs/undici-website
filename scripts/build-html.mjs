@@ -3,6 +3,7 @@ import { readFile, cp } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
+import { major } from "semver";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 
@@ -24,6 +25,8 @@ const runDocKit = (version) =>
       "orama-db",
       "-t",
       "legacy-json",
+      "-t",
+      "llms-txt",
       "--config-file",
       "./doc-kit.config.mjs",
     ],
@@ -39,4 +42,14 @@ const runDocKit = (version) =>
 
 for (const version of versions) {
   await runDocKit(version);
+
+  const majorVersion = `v${major(version)}.x`;
+  const versionDirectory = version === versions[0] ? "" : majorVersion;
+
+  // Keep a root-level copy for the rewrite in vercel.json because Vercel's
+  // preview deployment returns 404 for nested versioned llms.txt files.
+  await cp(
+    join("out", versionDirectory, "llms.txt"),
+    join("out", `llms-${majorVersion}.txt`),
+  );
 }

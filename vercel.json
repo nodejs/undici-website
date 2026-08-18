@@ -5,6 +5,12 @@
   "trailingSlash": false,
   "installCommand": "npm ci",
   "buildCommand": "npm run build",
+  "rewrites": [
+    {
+      "source": "/:version(v\\d+\\.x)/llms.txt",
+      "destination": "/llms-:version.txt"
+    }
+  ],
   "redirects": [
     {
       "source": "/docs/docs/:path*",

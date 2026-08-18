@@ -28,8 +28,8 @@ npm run build
 | Script                     | Description                                               |
 | -------------------------- | --------------------------------------------------------- |
 | `npm run build:fetch-docs` | Fetch the Undici Markdown docs for each supported version |
-| `npm run build:html`       | Render the fetched docs to static HTML with doc-kit       |
-| `npm run build`            | Run both steps above: fetch docs, then build HTML         |
+| `npm run build:html`       | Generate the static site and `llms.txt` with doc-kit       |
+| `npm run build`            | Fetch the docs, then generate all published output         |
 
 The build is driven by a couple of environment variables consumed in
 [`doc-kit.config.mjs`](doc-kit.config.mjs):
@@ -83,7 +83,7 @@ per version:
 
 ```
 npx -p @node-core/doc-kit doc-kit generate \
-  -t web -t orama-db -t legacy-json \
+  -t web -t orama-db -t legacy-json -t llms-txt \
   --config-file ./doc-kit.config.mjs
 ```
 
@@ -95,13 +95,17 @@ reads those variables to decide:
   the root (`/`); every other major builds to `out/v<major>.x/` and is served
   under that path.
 - **Generated targets** — `web` (the static HTML), `orama-db` (the client-side
-  search index), and `legacy-json` (the legacy JSON API docs). The
-  index/all/404 helper pages are only generated for the latest version.
+  search index), `legacy-json` (the legacy JSON API docs), and `llms-txt` (an
+  agent-readable index of the documentation). The index/all/404 helper pages
+  are only generated for the latest version.
 - **Theme & edit links** — custom `NavBar`, `Footer`, and `Sidebar` components
   are wired in, and "edit this page" links point back to the source Markdown in
   `nodejs/undici` (latest only).
 
-The combined `out/` tree is what Vercel publishes (see
+The `llms-txt` target uses [`llms-template.txt`](llms-template.txt) for the
+Undici-specific introduction and writes `llms.txt` alongside each version's
+HTML output. Its links use the same case-sensitive routes as the generated
+site. The combined `out/` tree is what Vercel publishes (see
 [`vercel.json`](vercel.json)).
 
 ### Adding or bumping a version
@@ -125,6 +129,7 @@ an automated PR when a new Undici version ships.
 | [`components/`](components/)               | Custom theme components (`NavBar`, `Footer`, `SideBar`)              |
 | [`scripts/`](scripts/)                     | Build automation (fetch docs, build HTML, update versions)           |
 | [`doc-kit.config.mjs`](doc-kit.config.mjs) | doc-kit configuration: input/output, routing, theme imports          |
+| [`llms-template.txt`](llms-template.txt)   | Undici-specific header used for the generated `llms.txt`             |
 | [`versions.json`](versions.json)           | The list of Undici versions that get documented                      |
 | [`vercel.json`](vercel.json)               | Vercel deployment configuration                                      |
 | `docs/`                                    | Markdown docs per major version (fetched at build time, git-ignored) |
